@@ -19,8 +19,6 @@ function App(): JSX.Element {
     'https://codepen.io/mseche/pen/oOVXLg'
   );
 
-  const [isRefresh, setIsRefresh] = useState(true);
-
   // ScrollView, RefreshControll 컴포넌트를 이용한 WebView 웹페이지 새로고침을 위한 Ref, State 및 handler
   const webViewRef = useRef(null);
   const [refreshing, setRefreshing] = useState(false);
@@ -30,11 +28,13 @@ function App(): JSX.Element {
       setRefreshing(true);
     }
   }, []);
+  // 위에서 아래로 스크롤 시 새로고침 이벤트 플래그
+  const [isScrollToRefresh, setIsScrollToRefresh] = useState(true);
 
   // page 변경 시 refresh이벤트 이용하기 위한 handler
   const pageHandler = (uri: string) => {
     setCurrentPage(uri);
-    setRefreshing(true);
+    // setRefreshing(true);
   };
 
   // android 이전버튼 누를 시 이전 페이지로 가는 기능
@@ -82,7 +82,7 @@ function App(): JSX.Element {
           contentContainerStyle={{ flex: 1 }}
           refreshControl={
             <RefreshControl
-              enabled={isRefresh}
+              enabled={isScrollToRefresh}
               refreshing={refreshing}
               onRefresh={onRefresh}
             />
@@ -101,10 +101,13 @@ function App(): JSX.Element {
             onLoad={() => {
               setRefreshing(false);
             }}
+            onLoadStart={() => {
+              setRefreshing(true);
+            }}
             allowsBackForwardNavigationGestures={true}
             scalesPageToFit={true}
             onScroll={(e) => {
-              setIsRefresh(e.nativeEvent.contentOffset.y === 0);
+              setIsScrollToRefresh(e.nativeEvent.contentOffset.y === 0);
             }}
           />
         </ScrollView>
