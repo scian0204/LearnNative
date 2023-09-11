@@ -79,7 +79,6 @@ function App(): JSX.Element {
     <>
       <SafeAreaView style={styles.container}>
         <ScrollView
-          nestedScrollEnabled={true}
           contentContainerStyle={{ flex: 1 }}
           refreshControl={
             <RefreshControl
@@ -88,12 +87,7 @@ function App(): JSX.Element {
               onRefresh={onRefresh}
             />
           }>
-          {/* <View style={{ flex: 1 }}> */}
           <WebView
-            nestedScrollEnabled={true}
-            // refreshControl={
-            //   <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-            // }
             ref={webViewRef}
             useWebKit={true}
             allowsInlineMediaPlayback={true}
@@ -113,7 +107,6 @@ function App(): JSX.Element {
               setIsRefresh(e.nativeEvent.contentOffset.y === 0);
             }}
           />
-          {/* </View> */}
         </ScrollView>
       </SafeAreaView>
       <Footer setCurrentPage={pageHandler} />
