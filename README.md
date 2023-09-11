@@ -22,6 +22,13 @@ React Native 개발환경 구성 및 기능구현 방법 확인
          startInLoadingState={true}
          renderLoading={function:React.Component}
          ```
+     - `IOS` 동영상 재생 시 자동 전체화면 막기
+       - `allowsInlineMediaPlayback={true}`
+     - `IOS` 웹킷 활성화
+       - `useWebKit={true}`
+     - `Android` 웹페이지 이상 스크롤 방지
+       - `overScrollMode="never"`
+     -
    - 페이지 새로고침
      - `pullToRefreshEnabled={true}`
        - 위에서 아래로 화면 스크롤 하여 새로고침 기능
