@@ -14,19 +14,19 @@ const menus = [
     uri: 'https://www.doorundoorun.com',
   },
   {
-    id: 2,
+    id: 3,
+    name: '티켓',
+    uri: '',
+  },
+  {
+    id: 4,
     name: '유튜브',
     uri: 'https://youtube.com',
   },
   {
-    id: 3,
+    id: 5,
     name: '구글',
     uri: 'https://google.com',
-  },
-  {
-    id: 4,
-    name: '다음',
-    uri: 'https://daum.net',
   },
 ];
 
@@ -39,6 +39,7 @@ function Footer({ setCurrentPage }: { setCurrentPage: (uri: string) => void }) {
         alignItems: 'center',
       }}>
       <FlatList
+        scrollEnabled={false}
         horizontal={true}
         data={menus}
         renderItem={({ item }) => (

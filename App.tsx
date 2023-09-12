@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   BackHandler,
+  Modal,
   Platform,
   RefreshControl,
   SafeAreaView,
@@ -8,10 +9,9 @@ import {
   StyleSheet,
   Text,
   View,
-  useWindowDimensions,
 } from 'react-native';
-import WebView from 'react-native-webview';
 import Footer from './components/Footer';
+import MyWebView from './components/MyWebView';
 
 function App(): JSX.Element {
   // 현재 WebView에 띄울 웹페이지 주소
@@ -57,21 +57,11 @@ function App(): JSX.Element {
     }
   }, []);
 
-  // 기기의 가로, 세로 값
-  const wd = useWindowDimensions();
-  const deviceWidth = wd.width;
-  const deviceHeight = wd.height;
-
   const styles = StyleSheet.create({
     container: {
       // flex: 1,
       alignItems: 'center',
       height: '95%',
-    },
-    webview: {
-      flex: 1,
-      width: deviceWidth, // 필수
-      // height: deviceHeight - 100, // 적용안됨
     },
   });
 
@@ -87,28 +77,11 @@ function App(): JSX.Element {
               onRefresh={onRefresh}
             />
           }>
-          <WebView
-            ref={webViewRef}
-            useWebKit={true}
-            allowsInlineMediaPlayback={true}
-            overScrollMode="never"
-            style={styles.webview}
-            source={{ uri: currentPage }}
-            startInLoadingState={true}
-            renderLoading={() => {
-              return <Text>Loading...</Text>;
-            }}
-            onLoad={() => {
-              setRefreshing(false);
-            }}
-            onLoadStart={() => {
-              setRefreshing(true);
-            }}
-            allowsBackForwardNavigationGestures={true}
-            scalesPageToFit={true}
-            onScroll={(e) => {
-              setIsScrollToRefresh(e.nativeEvent.contentOffset.y === 0);
-            }}
+          <MyWebView
+            webViewRef={webViewRef}
+            currentPage={currentPage}
+            setRefreshing={setRefreshing}
+            setIsScrollToRefresh={setIsScrollToRefresh}
           />
         </ScrollView>
       </SafeAreaView>
