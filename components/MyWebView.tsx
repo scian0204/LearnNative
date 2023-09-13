@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, useWindowDimensions } from 'react-native';
+import { Animated, StyleSheet, Text, useWindowDimensions } from 'react-native';
 import WebView from 'react-native-webview';
 
 interface propsIntf {
@@ -7,6 +7,7 @@ interface propsIntf {
   currentPage: string;
   setRefreshing: React.Dispatch<React.SetStateAction<boolean>>;
   setIsScrollToRefresh: React.Dispatch<React.SetStateAction<boolean>>;
+  setWebY: React.Dispatch<React.SetStateAction<number>>;
 }
 
 function MyWebView({
@@ -14,6 +15,7 @@ function MyWebView({
   currentPage,
   setRefreshing,
   setIsScrollToRefresh,
+  setWebY,
 }: propsIntf) {
   // 기기의 가로, 세로 값
   const wd = useWindowDimensions();
@@ -48,7 +50,9 @@ function MyWebView({
       allowsBackForwardNavigationGestures={true}
       scalesPageToFit={true}
       onScroll={(e) => {
-        setIsScrollToRefresh(e.nativeEvent.contentOffset.y === 0);
+        const y = e.nativeEvent.contentOffset.y;
+        setWebY(y);
+        setIsScrollToRefresh(y === 0);
       }}
       setSupportMultipleWindows={false}
     />
