@@ -97,6 +97,8 @@ React Native 개발환경 구성 및 기능구현 방법 확인
 
 2. 고정된 프레임 메뉴
    1. 일반 리액트와 같이 컴포넌트 분리하여 직접 구현
+      - `FlatList` 컴포넌트 사용
+        - `data` 속성에 배열 넣을 시 `renderItem={({item})=>React.Component}` 속성 `item` 인자에 배열 원소가 들어가며 개수만큼 컴포넌트 렌더링
    2. navigation 라이브러리 사용
 3. Push 알림
 4. 타 사이트 페이지 불러올 시 브라우저 앱 실행이 아닌 앱 내 웹 뷰로 이동 기능
@@ -109,3 +111,14 @@ React Native 개발환경 구성 및 기능구현 방법 확인
      - `animationType="none||slide||fade"`: 모달 활성화|비활성화 시 애니메이션 여부 및 종류
      - `transparent={bool}`: 모달 투명 여부(`false`시 뒤에 컨텐츠 가려짐)
      - `onRequestClose={function}`: 모달 활성화 시 `Android` 뒤로가기 버튼 클릭 시 호출되는 함수
+   - 모달 바깥 터치 시 모달 비활성화
+     - `Modal` 컴포넌트 안 최상단에 아래 컴포넌트 배치
+       - ```Tsx
+         <Pressable
+           onPress={toggleTicketModal}
+           style={{
+             position: 'absolute',
+             width: '100%',
+             height: '100%',
+           }}></Pressable>
+         ```
