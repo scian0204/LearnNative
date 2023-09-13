@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   BackHandler,
-  Modal,
   Platform,
   RefreshControl,
   SafeAreaView,
@@ -12,6 +11,7 @@ import {
 } from 'react-native';
 import Footer from './components/Footer';
 import MyWebView from './components/MyWebView';
+import Header from './components/Header';
 
 function App(): JSX.Element {
   // 현재 WebView에 띄울 웹페이지 주소
@@ -57,6 +57,9 @@ function App(): JSX.Element {
     }
   }, []);
 
+  // Header 애니메이션
+  const [webY, setWebY] = useState(0);
+
   const styles = StyleSheet.create({
     container: {
       // flex: 1,
@@ -68,6 +71,7 @@ function App(): JSX.Element {
   return (
     <>
       <SafeAreaView style={styles.container}>
+        <Header webY={webY} />
         <ScrollView
           contentContainerStyle={{ flex: 1 }}
           refreshControl={
@@ -82,6 +86,7 @@ function App(): JSX.Element {
             currentPage={currentPage}
             setRefreshing={setRefreshing}
             setIsScrollToRefresh={setIsScrollToRefresh}
+            setWebY={setWebY}
           />
         </ScrollView>
       </SafeAreaView>
