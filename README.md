@@ -100,7 +100,11 @@ React Native 개발환경 구성 및 기능구현 방법 확인
       - `FlatList` 컴포넌트 사용
         - `data` 속성에 배열 넣을 시 `renderItem={({item})=>React.Component}` 속성 `item` 인자에 배열 원소가 들어가며 개수만큼 컴포넌트 렌더링
    2. navigation 라이브러리 사용
-3. Push 알림
+3. `Push` 알림
+   - `IOS`의 경우 `Apple Developer`에 가입하여 인증키를 받고 앱을 등록해야 함
+   - `IOS` `Push` 알림 프로세스
+     - 요구되는 조건을 갖춘 `Push`알림을 보낼 서버 -> `APNs(Apple Push Notification service)` -> 클라이언트
+     - 클라이언트는 실행될 때 기기와 앱을 고유하게 식별할 수 있는 `토큰`을 `APNs`와 통신하여 서버에 보내며, 이후 보내는 알림에 `토큰`을 포함시키게 됨 따라서 다른 앱이나 기기에서 사용불가능함
 4. 타 사이트 페이지 불러올 시 브라우저 앱 실행이 아닌 앱 내 웹 뷰로 이동 기능
    1. `WebView` `Props` 항목 참조
 5. 모달 창
