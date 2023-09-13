@@ -21,14 +21,18 @@ function Ticket() {
       <Pressable
         style={({ pressed }) => [
           {
-            width: deviceWidth / 5,
+            position: 'absolute',
+            bottom: '5%',
+            width: deviceWidth / 5 - 10,
+            height: deviceWidth / 5 - 10,
+            borderRadius: deviceWidth,
             alignItems: 'center',
             justifyContent: 'center',
             backgroundColor: pressed ? 'hotpink' : 'pink',
           },
         ]}
         onPress={toggleTicketModal}>
-        <Text>티켓</Text>
+        <Text style={{ color: 'black' }}>티켓</Text>
       </Pressable>
     </>
   );

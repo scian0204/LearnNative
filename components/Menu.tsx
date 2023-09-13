@@ -1,6 +1,5 @@
 import React from 'react';
 import { Pressable, Text, View, useWindowDimensions } from 'react-native';
-import Ticket from './Ticket';
 
 function Menu(props: {
   setCurrentPage: (uri: string) => void;
@@ -14,16 +13,15 @@ function Menu(props: {
   const pressHandler = () => {
     props.setCurrentPage(props.menuObj.uri);
   };
-  if (props.menuObj.id === 3) {
-    return <Ticket />;
-  } else {
-    return (
-      <View
-        style={{
-          justifyContent: 'center',
-          alignItems: 'center',
-          width: width / 5,
-        }}>
+  return (
+    <View
+      style={{
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: width / 5,
+        backgroundColor: 'skyblue',
+      }}>
+      {props.menuObj.id !== 3 && (
         <Pressable
           onPress={pressHandler}
           style={({ pressed }) => [
@@ -35,11 +33,11 @@ function Menu(props: {
               paddingVertical: '10%',
             },
           ]}>
-          <Text>{props.menuObj.name}</Text>
+          <Text style={{ color: 'black' }}>{props.menuObj.name}</Text>
         </Pressable>
-      </View>
-    );
-  }
+      )}
+    </View>
+  );
 }
 
 export default Menu;

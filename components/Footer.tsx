@@ -1,6 +1,7 @@
 import React from 'react';
 import { FlatList, View } from 'react-native';
 import Menu from './Menu';
+import Ticket from './Ticket';
 
 const menus = [
   {
@@ -15,7 +16,7 @@ const menus = [
   },
   {
     id: 3,
-    name: '티켓',
+    name: '',
     uri: '',
   },
   {
@@ -47,6 +48,7 @@ function Footer({ setCurrentPage }: { setCurrentPage: (uri: string) => void }) {
         )}
         keyExtractor={(item) => item.id.toString()}
       />
+      <Ticket />
     </View>
   );
 }
