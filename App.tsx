@@ -1,97 +1,78 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import {
-  BackHandler,
-  Platform,
-  RefreshControl,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
-import Footer from './components/Footer';
-import MyWebView from './components/MyWebView';
-import Header from './components/Header';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { Alert, Platform, SafeAreaView, Text, View } from 'react-native';
+import * as Notifications from 'expo-notifications';
+axios.defaults.withCredentials = true;
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
 
 function App(): JSX.Element {
-  // 현재 WebView에 띄울 웹페이지 주소
-  const [currentPage, setCurrentPage] = useState(
-    'https://codepen.io/mseche/pen/oOVXLg'
-  );
-
-  // ScrollView, RefreshControll 컴포넌트를 이용한 WebView 웹페이지 새로고침을 위한 Ref, State 및 handler
-  const webViewRef = useRef(null);
-  const [refreshing, setRefreshing] = useState(false);
-  const onRefresh = useCallback(() => {
-    if (webViewRef.current) {
-      webViewRef.current.reload();
-      setRefreshing(true);
-    }
-  }, []);
-  // 위에서 아래로 스크롤 시 새로고침 이벤트 플래그
-  const [isScrollToRefresh, setIsScrollToRefresh] = useState(true);
-
-  // page 변경 시 refresh이벤트 이용하기 위한 handler
-  const pageHandler = (uri: string) => {
-    setCurrentPage(uri);
-    // setRefreshing(true);
-  };
-
-  // android 이전버튼 누를 시 이전 페이지로 가는 기능
-  const onAndroidBackPress = () => {
-    if (webViewRef.current) {
-      webViewRef.current.goBack();
-      return true;
-    }
-    return false;
-  };
+  const [resultMsg, setResultMsg] = useState('');
   useEffect(() => {
-    if (Platform.OS === 'android') {
-      BackHandler.addEventListener('hardwareBackPress', onAndroidBackPress);
-      return () => {
-        BackHandler.removeEventListener(
-          'hardwareBackPress',
-          onAndroidBackPress
-        );
-      };
-    }
+    // 권한 확인 및 묻기
+    const requestUserPermission = async () => {
+      const { status } = await Notifications.requestPermissionsAsync();
+      if (status !== 'granted') {
+        console.log('Permission to receive notifications was denied.');
+      }
+    };
+
+    // AWS SNS 연결
+    const registerDeviceTokenWithSNS = async () => {
+      try {
+        // 디바이스 토큰 얻기
+        const deviceToken = (await Notifications.getDevicePushTokenAsync())
+          .data;
+
+        const msg = '토큰 발급 완료';
+        setResultMsg(msg);
+        // Alert.alert(msg);
+
+        axios
+          .post(
+            'http://192.168.5.182:8080/api/sns/subscribe',
+            {
+              deviceToken: deviceToken,
+              os: Platform.OS,
+            },
+            {
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }
+          )
+          .then((res) => {
+            const msg = `요청 성공 || msg: ${res.data}`;
+            Alert.alert(msg);
+            setResultMsg(msg);
+          })
+          .catch((res) => {
+            const msg =
+              '요청실패 || msg: ' + res.message + ' || code: ' + res.code;
+            Alert.alert(msg);
+            setResultMsg(msg);
+          });
+      } catch (error) {
+        const msg = '토큰 발급 실패 || msg: ' + error;
+        Alert.prompt(msg);
+        setResultMsg(msg);
+      }
+    };
+
+    requestUserPermission();
+    registerDeviceTokenWithSNS();
   }, []);
-
-  // Header 애니메이션
-  const [webY, setWebY] = useState(0);
-
-  const styles = StyleSheet.create({
-    container: {
-      // flex: 1,
-      alignItems: 'center',
-      height: '95%',
-    },
-  });
 
   return (
-    <>
-      <SafeAreaView style={styles.container}>
-        <Header webY={webY} />
-        <ScrollView
-          contentContainerStyle={{ flex: 1 }}
-          refreshControl={
-            <RefreshControl
-              enabled={isScrollToRefresh}
-              refreshing={refreshing}
-              onRefresh={onRefresh}
-            />
-          }>
-          <MyWebView
-            webViewRef={webViewRef}
-            currentPage={currentPage}
-            setRefreshing={setRefreshing}
-            setIsScrollToRefresh={setIsScrollToRefresh}
-            setWebY={setWebY}
-          />
-        </ScrollView>
-      </SafeAreaView>
-      <Footer setCurrentPage={pageHandler} />
-    </>
+    <SafeAreaView style={{ flex: 1 }}>
+      <Text style={{ fontSize: 30 }}>{resultMsg}</Text>
+    </SafeAreaView>
   );
 }
 
